@@ -1,0 +1,57 @@
+
+1. Build a virtual Env of python with python fabric module.
+	a) Build Docker Container with oralce Linux 7.4 
+	   	#docker run -it oraclelinux:7.4
+	b) Conect to docker container image
+	   	To list the docker container list 
+		#docker ps -a 
+		#docker attach <container ID>
+	c) Export proxy if needed
+		#export http_proxy=http://proxy_host:3128
+		#export https_proxy=http://proxy_host.int:3128
+	d) Install the required packages
+		#yum install python
+		#yum install python-pip
+		#yum install virtualenv
+	e) Create a virtual environment for the project:
+		#mkdir project_fab
+		#virtualenv -p  /usr/bin/python2.7
+		#virtualenv -p  /usr/bin/python2.7  /root/project_fab/
+		#source project_fab/bin/activate
+		#pip install fabric
+	f) Compress the virtualenv project using tar.
+		#tar -czvf project_fab.tar.gz project_fab/
+	g) Disconnect from docker container & Copy the tarball to localhost
+		#docker cp <container-id>:/root/project_fab.tar.gz .
+		#cp project_fab.tar.gz /home/<user-id>/
+	h) Untar the compressed tarball into your home directory
+		#tar -zxvf project_fab.tar.gz
+		#./project_fab/bin/python ./project_fab/bin/fab --help
+	i) create a fabfile.py and hosts_file
+		fabfile.py
+		-----------------------python fabric code-----------------------------------------------------------
+			from fabric.api import run, env, settings
+			from fabric.operations import sudo, local
+
+			env.hosts = open('hosts_file', 'r').readlines()
+			env.password = 'XXXXX'
+			def taskA():
+			        with settings(prompts={"Password: " : "XXXXX"}):
+			                run("sudo  userad testuser")
+		----------------------------------------------------------------------------------------------------
+		hosts_file
+		----------------------list of fqdn pod-hosts------------
+		ip
+		ip
+		ip
+				.
+				.
+				.
+			'n' number of host names
+		--------------------------------------------------------
+	c) Execute the cmd to run the tasks on rmote hosts
+		#./project_fab/bin/python ./project_fab/bin/fab taskA
+
+		#./project_fab/bin/python ./project_fab/bin/fab taskA 2>&1 | tee faberror.txt
+
+		
