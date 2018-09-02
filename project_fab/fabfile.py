@@ -3,6 +3,6 @@ from fabric.operations import sudo, local
 
 env.hosts = open('hosts_file', 'r').readlines()
 env.password = 'XXXXX'
-def instocla():
+def addduser():
         with settings(prompts={"Password: " : "XXXXX"}):
         run("sudo  userad testuser")
