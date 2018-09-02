@@ -1,9 +1,4 @@
 ---
-- hosts: test0
-  tasks:
-
-
----
 - name: Setup docker
   gather_facts: yes
   hosts: <>
